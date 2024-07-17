@@ -65,7 +65,8 @@ def main(args):
 
     audio_files = find_audio_files(args.ref_path)
 
-    for source in audio_files:
+    for i, source in enumerate(audio_files):
+        print(i, source)
         source_audio = librosa.load(source, sr=24000)[0]
         # crop only the first 30 seconds
         source_audio = source_audio[:24000 * 30]
@@ -80,8 +81,11 @@ def main(args):
         full_pred_wave = model.decoder(z)
 
         os.makedirs("reconstructed", exist_ok=True)
-        source_name = source.split("/")[-1].split(".")[0]
-        torchaudio.save(source.replace("ref_path", "syn_path"), full_pred_wave[0].cpu(), 24000)
+        # source_name = source.split("/")[-1].split(".")[0]
+        target_name = source.replace("ref_path", "syn_path")
+        if not os.path.exists(target_name.replace(os.get_basename(target_name), "")):
+            os.makedirs(target_name.replace(os.get_basename(target_name), ""))
+        torchaudio.save(target_name, full_pred_wave[0].cpu(), 24000)
 
 
 if __name__ == "__main__":
