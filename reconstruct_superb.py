@@ -62,7 +62,6 @@ def get_parameter_number(model):
 @torch.no_grad()
 def main(args):
     model = load_model(args)
-    source = args.source
 
     audio_files = find_audio_files(args.ref_path)
     print(audio_files)
