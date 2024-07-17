@@ -64,8 +64,7 @@ def main(args):
     model = load_model(args)
 
     audio_files = find_audio_files(args.ref_path)
-    print(audio_files)
-    exit()    
+
     for source in audio_files:
         source_audio = librosa.load(source, sr=24000)[0]
         # crop only the first 30 seconds
@@ -82,7 +81,7 @@ def main(args):
 
         os.makedirs("reconstructed", exist_ok=True)
         source_name = source.split("/")[-1].split(".")[0]
-        torchaudio.save(f"reconstructed/{source_name}.wav", full_pred_wave[0].cpu(), 24000)
+        torchaudio.save(source.replace("ref_path", "syn_path"), full_pred_wave[0].cpu(), 24000)
 
 
 if __name__ == "__main__":
@@ -91,6 +90,6 @@ if __name__ == "__main__":
     parser.add_argument("--config-path", type=str, default="")
     # parser.add_argument("--source", type=str, required=True)
     parser.add_argument("--ref-path", type=str, default="/workspace/Codec-SUPERB/ref_path")
-    parser.add_argument("--syn-path", type=str, default="/workspace/Codec-SUPERB/syn_path")
+    # parser.add_argument("--syn-path", type=str, default="syn_path")
     args = parser.parse_args()
     main(args)
