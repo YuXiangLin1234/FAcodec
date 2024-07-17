@@ -13,6 +13,7 @@ from torch import nn
 import torch.nn.functional as F
 import torchaudio
 from torch.utils.data import DataLoader
+from datasets import load_dataset
 
 import math
 
@@ -57,13 +58,20 @@ class PseudoDataset(torch.utils.data.Dataset):
         self.sr = sr
         self.duration_range = range
 
+        ds = load_dataset("simon3000/starrail-voice")
+        self.ds = ds.filter(lambda x: x["language"] == "Chinese(PRC)")
+
+
+
     def __len__(self):
         # return len(self.data_list)
-        return 100 # return a fixed number for testing
+        return len(self.ds) # return a fixed number for testing
 
     def __getitem__(self, idx):
         # replace this with your own data loading
         # wave, sr = librosa.load(self.data_list[idx], sr=self.sr)
+        wave = self.ds[idx]["audio"]["array"]
+        sr = self.ds[idx]["audio"]["sampling_rate"]
         wave = np.random.randn(self.sr * random.randint(*self.duration_range))
         wave = wave / np.max(np.abs(wave))
         mel = preprocess(wave).squeeze(0)
