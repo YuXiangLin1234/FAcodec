@@ -50,16 +50,17 @@ def preprocess(wave):
 
 class PseudoDataset(torch.utils.data.Dataset):
     def __init__(self,
-                 sr=24000,
-                 range=(1, 30), # length of the audio duration in seconds
+                 sr=16000,
+                 range=(1, 60), # length of the audio duration in seconds
                  ):
 
         self.data_list = [] # read your list path here
         self.sr = sr
         self.duration_range = range
 
-        ds = load_dataset("simon3000/starrail-voice")
-        self.ds = ds.filter(lambda x: x["language"] == "Chinese(PRC)")
+        # ds = load_dataset("simon3000/starrail-voice")
+        self.ds = load_dataset("mozilla-foundation/common_voice_16_1", "zh-TW", split="train")
+        # self.ds = ds.filter(lambda x: x["language"] == "Chinese(PRC)")
 
 
 
